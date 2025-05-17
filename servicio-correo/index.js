@@ -12,6 +12,7 @@ const openapi = fromHono(app, {
 });
 
 openapi.post("/correo", EmailSend);
+openapi.post("/correo/:batchId", EmailSend);
 
 import { serve } from '@hono/node-server'
 serve({
