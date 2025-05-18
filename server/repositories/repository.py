@@ -59,7 +59,7 @@ def create_subscription_query(type, status, created_at):
         return None
 
 
-def create_transaction_query(amount, status, user_id, subscription_id=None):
+def create_transaction_query(amount, status, user_id, subscription_id=None, last_card_digits=None, device_footprint=None, transaction_ip=None):
     try:
         connection = postgresql_connection()
         new_transaction_id = None
@@ -67,11 +67,11 @@ def create_transaction_query(amount, status, user_id, subscription_id=None):
             created_at = datetime.now()
             cursor.execute(
                 """
-                INSERT INTO transactions (user_id, amount, status, subscription_id, created_at)
-                VALUES (%s, %s, %s, %s, %s)
+                INSERT INTO transactions (user_id, amount, status, subscription_id, created_at, last_card_digits, device_footprint, transaction_ip)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING id;
                 """,
-                (user_id, amount, status, subscription_id, created_at)
+                (user_id, amount, status, subscription_id, created_at, last_card_digits, device_footprint, transaction_ip)
             )
             new_transaction_id = cursor.fetchone()[0]
 
@@ -256,7 +256,6 @@ def get_subscribed_emails(date):
 
         connection.close()
         emails = [row[0] for row in results]
-        print(emails)
         return emails
 
     except Exception as e:
@@ -291,7 +290,7 @@ def get_not_subscribed_emails(date):
         return []
 
 
-def create_mail_template_command(content, name, recurrent):
+def create_template_command(content, name, recurrent, type):
     try:
         connection = postgresql_connection()
         with connection.cursor() as cursor:
@@ -301,7 +300,7 @@ def create_mail_template_command(content, name, recurrent):
                 VALUES (%s, %s, %s, %s)
                 RETURNING id;
                 """,
-                (recurrent, "MAIL", name, content)
+                (recurrent, type, name, content)
             )
             new_id = cursor.fetchone()[0]
             connection.commit()
@@ -314,7 +313,7 @@ def create_mail_template_command(content, name, recurrent):
             connection.close()
 
 
-def update_mail_template_command(template_id, content, name, recurrent):
+def update_template_command(template_id, content, name, recurrent):
     try:
         connection = postgresql_connection()
         with connection.cursor() as cursor:
@@ -322,7 +321,7 @@ def update_mail_template_command(template_id, content, name, recurrent):
                 """
                 UPDATE message_templates
                 SET content = %s, name = %s, recurrent = %s
-                WHERE id = %s AND type = 'MAIL'
+                WHERE id = %s
                 RETURNING id;
                 """,
                 (content, name, recurrent, template_id)
@@ -341,7 +340,7 @@ def update_mail_template_command(template_id, content, name, recurrent):
             connection.close()
 
 
-def get_all_message_templates():
+def get_all_message_templates_by_type(type):
     try:
         connection = postgresql_connection()
         with connection.cursor() as cursor:
@@ -349,8 +348,9 @@ def get_all_message_templates():
                 """
                 SELECT id, recurrent, type, name, content
                 FROM message_templates
-                WHERE type = 'MAIL'
-                """
+                WHERE type = %s
+                """,
+                (type,)
             )
             results = cursor.fetchall()
             return results
@@ -360,3 +360,4 @@ def get_all_message_templates():
     finally:
         if connection:
             connection.close()
+

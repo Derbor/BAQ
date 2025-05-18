@@ -5,6 +5,9 @@ import './App.css'
 import PpxButton from './components/PpxButton'
 import { data } from './configuration/ppx.data'
 import { Link, Route, Switch } from "wouter";
+import Inicio from './pages/Inicio'
+import MontoTarjeta from './pages/MontoTarjeta'
+import { Toaster, } from 'react-hot-toast';
 
 const InboxPage = () => {
   return <h1>Inbox</h1>;
@@ -13,14 +16,12 @@ const InboxPage = () => {
 function App() {
   return (
     <>
+    <Toaster position='top-center' />
     <Switch>
-      <Route path="/">
-      <h1>Opciones de pago</h1>
-        <Link href='/tarjeta'>Tarjeta de credito</Link>
-        <br />
-        <Link href='/debito'>Debito bancario automatico</Link>
+      <Route path="/" component={Inicio}>
       </Route>
       <Route path="/inbox" component={InboxPage} />
+      <Route path="/tarjeta" component={MontoTarjeta} />
       <Route path="/pagar">
         <PpxButton data={data} />
       </Route>

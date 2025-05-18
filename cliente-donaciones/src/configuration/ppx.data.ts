@@ -66,13 +66,13 @@ let data = {
        True -> en caso de realizar un pago recurrente
         False -> si es pago normal
      */
-    PayboxRecurrent: false,
+    PayboxRecurrent: true,
 
     /* Requerido
        Id o nombre exacto del plan registrado en el comercio en la  
                plataforma de pagoplux
     */
-    PayboxIdPlan: 'Plan Mensual',
+    PayboxIdPlan: 'Bacano',
 
     /**
      * true -> los cobros se realizan de manera automática según la

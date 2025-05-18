@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from services.service import BAQService
+from services.email_service import send_emails
 from models.user import User
 
 app = Blueprint('baq_blueprint', __name__)
@@ -25,11 +26,14 @@ def donate():
     data = request.json
     email = data.get("email", None)
     amount = data.get("amount", 0)
+    last_card_digits = data.get("last_card_digits", "")
+    device_footprint = data.get("device_footprint", "")
+    transaction_ip = data.get("transaction_ip", "")
 
     if amount < 1:
         return jsonify({'ERROR': 'Donations must have to be greater than $1 dollar'}), 400
 
-    serviceResponse = baqService.create_transaction(email, amount)
+    serviceResponse = baqService.create_transaction(email, amount, last_card_digits, device_footprint, transaction_ip)
     return jsonify({'RESPONSE': serviceResponse[0]}), 200
 
 
@@ -104,18 +108,19 @@ def get_emails_by_category():
     serviceResponse = baqService.get_email_data(recurrent)
     return jsonify(serviceResponse), 200
 
-@app.route('/create-mail', methods=['POST'])
-def create_email_template():
+@app.route('/create-template', methods=['POST'])
+def create_template():
     data = request.json
+    type = data.get("type")
     content = data.get("content", "")
     name = data.get("name", "")
     recurrent = data.get("recurrent", False)
 
-    serviceResponse = baqService.create_mail_template(content, name, recurrent)
+    serviceResponse = baqService.create_template(content, name, recurrent, type)
     return jsonify(serviceResponse), 200
 
-@app.route('/edit-mail', methods=['PUT'])
-def edit_email_template():
+@app.route('/edit-template', methods=['PUT'])
+def edit_template():
     data = request.json
     template_id = data.get("id", None)
     content = data.get("content", "")
@@ -125,10 +130,15 @@ def edit_email_template():
     if template_id is None:
         return jsonify({"Error" : "ESTE TEMPLATE NO EXISTE"}), 400
 
-    serviceResponse = baqService.update_mail_template(template_id, content, name, recurrent)
+    serviceResponse = baqService.update_template(template_id, content, name, recurrent)
     return jsonify(serviceResponse), 200
 
-@app.route('/get-all-mail-templates', methods=['GET'])
-def get_all_mail_templates():
-    serviceResponse = baqService.get_mail_templates()
+@app.route('/get-all-templates', methods=['GET'])
+def get_all_templates():
+    type = request.args.get("type", None)
+
+    if type is None:
+        return jsonify({"Error" : "NO TEMPLATE TYPE WAS PROVIDEN"}), 400
+    
+    serviceResponse = baqService.get_templates(type)
     return jsonify(serviceResponse), 200

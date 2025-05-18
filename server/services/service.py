@@ -1,5 +1,6 @@
 from repositories.repository import *
 from datetime import datetime, timedelta
+import requests
 
 class BAQService:
 
@@ -20,12 +21,19 @@ class BAQService:
                 user.subscription_id = subscription_id    
 
         result = create_user_query(user.name, user.email, created_at, updated_at, user.subscription_id)
+
         return "USER CREATED", result
     
-    def create_transaction(self, email, amount):
+    def create_transaction(self, email, amount, last_card_digits, device_footprint, transaction_ip):
         user_id = get_user_id_by_email_query(email)
         subscription_id = get_active_subscription_id_by_email_query(email)
-        new_transaction_id = create_transaction_query(amount, "PAYED", user_id, subscription_id)
+        new_transaction_id = create_transaction_query(amount, "PAYED", user_id, subscription_id, last_card_digits, device_footprint, transaction_ip)
+        
+        #SEND OF EMAIL FOR TESTING PURPOSES
+        emailSubject, emailBody  = get_email_template(False)
+        emailData = {"emails" : [email], "subject": emailSubject, "body": emailBody}
+        self.send_email(emailData)
+
         return "TRANSACTION CREATED", new_transaction_id
     
     def get_subscription_id_by_email(self, email):
@@ -55,11 +63,20 @@ class BAQService:
         return {"emails" : emails, "subject": emailSubject, "body": emailBody}
     
 
-    def create_mail_template(self, content, name, recurrent):
-        return create_mail_template_command(content, name, recurrent)
+    def create_template(self, content, name, recurrent, type):
+        return create_template_command(content, name, recurrent, type)
     
-    def update_mail_template(self, template_id, content, name, recurrent):
-        return update_mail_template_command(template_id, content, name, recurrent)
+    def update_template(self, template_id, content, name, recurrent):
+        return update_template_command(template_id, content, name, recurrent)
     
-    def get_mail_templates(self):
-        return get_all_message_templates()
+    def get_templates(self, type):
+        return get_all_message_templates_by_type(type)
+    
+    def send_email(self, payload):
+        url = 'https://mail.andresgaibor.trade/correo'
+        try:
+            response = requests.post(url, json=payload)
+            response.raise_for_status()
+            print("Código de estado:", response.status_code)
+        except requests.exceptions.RequestException as e:
+            print("Error al enviar el correo:", e)

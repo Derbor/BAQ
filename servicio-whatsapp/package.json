@@ -14,12 +14,14 @@
   "dependencies": {
     "@hono/node-server": "^1.14.1",
     "@hono/zod-openapi": "^0.19.6",
+    "@tailwindcss/vite": "^4.1.7",
     "chanfana": "^2.8.0",
     "crypto": "^1.0.1",
     "dotenv": "^16.5.0",
     "hono": "^4.7.10",
     "puppeteer": "^24.8.2",
     "qrcode-terminal": "^0.12.0",
+    "tailwindcss": "^4.1.7",
     "whatsapp-web.js": "^1.28.0",
     "zod": "^3.24.4"
   }
