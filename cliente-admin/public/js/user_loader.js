@@ -1,15 +1,36 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const greetingEl = document.getElementById("greeting");
+  const donationEl = document.getElementById("donation-amount");
 
   try {
-    // 🔧 Replace with the correct API once you know it
-    const res = await fetch("http://your-api-url.com/get-user-name?id=123");
-    const data = await res.json();
+    const res = await fetch("http://162.243.77.211:8081/analitics");
+    const analyticsData = await res.json();
 
-    const name = data?.name || "amig@";  // Fallback if name is missing
-    greetingEl.textContent = `Hola, ${name}.`;
+    // You can select a specific donor ID dynamically or hardcoded (e.g., 3)
+   const urlParams = new URLSearchParams(window.location.search);
+const donorId = urlParams.get('id') || 3; // fallback to ID 3
+
+    const donor = analyticsData[donorId];
+
+    if (donor) {
+      const name = donor.name || "amig@";
+      const total = donor.totalDonated;
+
+      greetingEl.textContent = `Hola, ${name}.`;
+
+      if (total !== undefined && total !== null) {
+        donationEl.textContent = `Has donado un total de $${total}. ¡Gracias de corazón! ❤️`;
+      } else {
+        donationEl.style.display = "none";
+      }
+    } else {
+      greetingEl.textContent = "Hola, amig@.";
+      donationEl.style.display = "none";
+    }
+
   } catch (err) {
-    console.error("❌ Error al cargar el nombre:", err);
+    console.error("❌ Error al cargar los datos del donante:", err);
     greetingEl.textContent = "Hola, amig@.";
+    donationEl.style.display = "none";
   }
 });
