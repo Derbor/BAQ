@@ -8,6 +8,7 @@ import { Link, Route, Switch } from "wouter";
 import Inicio from './pages/Inicio'
 import MontoTarjeta from './pages/MontoTarjeta'
 import { Toaster, } from 'react-hot-toast';
+import Donacion from './pages/Donacion'
 
 const InboxPage = () => {
   return <h1>Inbox</h1>;
@@ -22,9 +23,7 @@ function App() {
       </Route>
       <Route path="/inbox" component={InboxPage} />
       <Route path="/tarjeta" component={MontoTarjeta} />
-      <Route path="/pagar">
-        <PpxButton data={data} />
-      </Route>
+      <Route path="/pagar" component={Donacion} />
       <Route path="/users/:name">
         {(params) => <>Hello, {params.name}!</>}
       </Route>

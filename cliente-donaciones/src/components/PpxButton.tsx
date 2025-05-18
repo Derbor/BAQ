@@ -3,7 +3,7 @@ import { iniciarDatos } from "../configuration/ppx.index"
 
 const PpxButton = ({ data }: { data: any }) => {
     const estiloBoton = {
-        display: "none",
+        display: "block",
         backgroundColor: "#FAFAFA",
         right: "80px",
         backgroundImage:
@@ -18,13 +18,15 @@ const PpxButton = ({ data }: { data: any }) => {
         outline: "0",
         boxShadow: "0px 2px 2px lightgray",
     };
+
+
     useEffect(() => {
         iniciarDatos(data);
     }, [data]);
     return (
         <>
             <div id="modalPaybox"></div>
-            <button style={estiloBoton} id="pay" type="submit"></button>
+            <button style={estiloBoton}  id="pay" type="submit"></button>
         </>
     );
 };

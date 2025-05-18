@@ -10,12 +10,14 @@ interface InputFieldProps {
   required?: boolean;
   autoFocus?: boolean;
   isOptional?: boolean;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
   id,
   label,
   value,
+  onBlur,
   onChange,
   type = 'text',
   placeholder = '',
@@ -36,6 +38,7 @@ const InputField: React.FC<InputFieldProps> = ({
         id={id}
         value={value}
         autoFocus={autoFocus}
+        onBlur={onBlur}
         onChange={onChange}
         required={required}
         className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg shadow-sm text-lg focus:outline-none focus:ring-orange-500 focus:border-orange-500"

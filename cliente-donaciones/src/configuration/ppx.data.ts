@@ -1,3 +1,5 @@
+// import toast from "react-hot-toast";
+
 let data = {
     /* Requerido. Email de la cuenta PagoPlux del Establecimiento */
     PayboxRemail: "abautista@pagoplux.com",
@@ -99,7 +101,8 @@ let data = {
     onAuthorize: (response: any) => {
         if (response.status === "succeeded") {
             console.log(response);
-            alert("Proceso completado con éxito");
+            // alert("Proceso completado con éxito");
+            // toast.success("Proceso completado con éxito");
             // @ts-ignore
             jQuery('.container-unpayed').hide();
             console.log(response) //monto
@@ -119,7 +122,6 @@ let data = {
             // response.tipoPago //tipo de pago usado
         }
     }
-
 }
 
 export { data }

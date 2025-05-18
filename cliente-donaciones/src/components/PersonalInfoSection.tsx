@@ -9,6 +9,7 @@ interface PersonalInfoSectionProps {
   onTelefonoChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onNombreChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
@@ -16,6 +17,8 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   nombre,
   onEmailChange,
   onNombreChange,
+  onBlur
+
 }) => {
   return (
     <div className="p-8 space-y-6 bg-white transition-all duration-300 ease-in-out animate-fadeIn">
@@ -25,6 +28,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         value={email}
         onChange={onEmailChange}
         type="email"
+        onBlur={onBlur}
         placeholder="tu@email.com"
         required
       />
@@ -33,6 +37,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         id="nombre"
         label="Nombre"
         value={nombre}
+        onBlur={onBlur}
         onChange={onNombreChange}
         placeholder="Tu nombre"
         isOptional
