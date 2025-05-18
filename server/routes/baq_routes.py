@@ -17,20 +17,80 @@ def register():
         subscription_id=data.get(None)
     )
     serviceResponse = baqService.create_user(user)
-    return jsonify({'RESPONSE': serviceResponse}), 200
+    return jsonify({'RESPONSE': serviceResponse[0]}), 200
+
 
 @app.route('/donate', methods=['POST'])
 def donate():
-    return jsonify({'RESPONSE': 'DATA'}), 200
+    data = request.json
+    email = data.get("email", None)
+    amount = data.get("amount", 0)
 
-@app.route('/cancel-subscription', methods=['POST'])
+    if amount < 1:
+        return jsonify({'ERROR': 'Donations must have to be greater than $1 dollar'}), 400
+
+    serviceResponse = baqService.create_transaction(email, amount)
+    return jsonify({'RESPONSE': serviceResponse[0]}), 200
+
+
+@app.route('/cancel-subscription', methods=['PUT'])
 def cancel_subscription():
-    return jsonify({'RESPONSE': 'DATA'}), 200
+    data = request.json
+    email = data.get("email", None)
 
-@app.route('/pause-subscription', methods=['POST'])
+    if email is None:
+        return jsonify({'ERROR': 'Email must be providen for cancel the subscription'}), 400
+    
+    if baqService.user_exist_by_email(email) == None:
+        return jsonify({'ERROR': 'Bad email'}), 400
+    
+    if baqService.get_subscription_id_by_email(email) == None:
+        return jsonify({'ERROR': 'There is not an active subscription related to this user'}), 400
+
+    serviceResponse = baqService.cancel_pause_user_subscription(email, "CANCELED")
+
+    if serviceResponse == None:
+        return jsonify({'ERROR': "THE SUBSCRIPTION WAS NOT CANCELED"}), 400
+    return jsonify({'RESPONSE': serviceResponse}), 200
+
+
+@app.route('/pause-subscription', methods=['PUT'])
 def pause_subscription():
-    return jsonify({'RESPONSE': 'DATA'}), 200
+    data = request.json
+    email = data.get("email", None)
 
-@app.route('/resume-subscription', methods=['POST'])
+    if email is None:
+        return jsonify({'ERROR': 'Email must be providen for pause the subscription'}), 400
+    
+    if baqService.user_exist_by_email(email) == None:
+        return jsonify({'ERROR': 'Bad email'}), 400
+        
+    if baqService.get_subscription_id_by_email(email) == None:
+        return jsonify({'ERROR': 'There is not an active subscription related to this user'}), 400
+
+    serviceResponse = baqService.cancel_pause_user_subscription(email, "PAUSED")
+
+    if serviceResponse == None:
+        return jsonify({'ERROR': "THE SUBSCRIPTION WAS NOT PAUSED"}), 400
+    return jsonify({'RESPONSE': serviceResponse}), 200
+
+
+@app.route('/resume-subscription', methods=['PUT'])
 def resume_subscription():
-    return jsonify({'RESPONSE': 'DATA'}), 200
+    data = request.json
+    email = data.get("email", None)
+
+    if email is None:
+        return jsonify({'ERROR': 'Email must be providen for resume the subscription'}), 400
+
+    if baqService.user_exist_by_email(email) == None:
+        return jsonify({'ERROR': 'Bad email'}), 400
+    
+    if baqService.get_subscription_id_by_email(email) == None:
+        return jsonify({'ERROR': 'There is not an active subscription related to this user'}), 400
+    
+    serviceResponse = baqService.resume_user_subscription(email)
+
+    if serviceResponse == None:
+        return jsonify({'ERROR': "THE SUBSCRIPTION WAS NOT RESUMED"}), 400
+    return jsonify({'RESPONSE': serviceResponse}), 200
