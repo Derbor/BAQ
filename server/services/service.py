@@ -55,11 +55,11 @@ class BAQService:
         return {"emails" : emails, "subject": emailSubject, "body": emailBody}
     
 
-    def create_mail_template(self, content, name, recurrent):
-        return create_mail_template_command(content, name, recurrent)
+    def create_template(self, content, name, recurrent, type):
+        return create_template_command(content, name, recurrent, type)
     
-    def update_mail_template(self, template_id, content, name, recurrent):
-        return update_mail_template_command(template_id, content, name, recurrent)
+    def update_template(self, template_id, content, name, recurrent):
+        return update_template_command(template_id, content, name, recurrent)
     
-    def get_mail_templates(self):
-        return get_all_message_templates()
+    def get_templates(self, type):
+        return get_all_message_templates_by_type(type)

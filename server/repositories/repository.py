@@ -291,7 +291,7 @@ def get_not_subscribed_emails(date):
         return []
 
 
-def create_mail_template_command(content, name, recurrent):
+def create_template_command(content, name, recurrent, type):
     try:
         connection = postgresql_connection()
         with connection.cursor() as cursor:
@@ -301,7 +301,7 @@ def create_mail_template_command(content, name, recurrent):
                 VALUES (%s, %s, %s, %s)
                 RETURNING id;
                 """,
-                (recurrent, "MAIL", name, content)
+                (recurrent, type, name, content)
             )
             new_id = cursor.fetchone()[0]
             connection.commit()
@@ -314,7 +314,7 @@ def create_mail_template_command(content, name, recurrent):
             connection.close()
 
 
-def update_mail_template_command(template_id, content, name, recurrent):
+def update_template_command(template_id, content, name, recurrent):
     try:
         connection = postgresql_connection()
         with connection.cursor() as cursor:
@@ -322,7 +322,7 @@ def update_mail_template_command(template_id, content, name, recurrent):
                 """
                 UPDATE message_templates
                 SET content = %s, name = %s, recurrent = %s
-                WHERE id = %s AND type = 'MAIL'
+                WHERE id = %s
                 RETURNING id;
                 """,
                 (content, name, recurrent, template_id)
@@ -341,7 +341,7 @@ def update_mail_template_command(template_id, content, name, recurrent):
             connection.close()
 
 
-def get_all_message_templates():
+def get_all_message_templates_by_type(type):
     try:
         connection = postgresql_connection()
         with connection.cursor() as cursor:
@@ -349,8 +349,9 @@ def get_all_message_templates():
                 """
                 SELECT id, recurrent, type, name, content
                 FROM message_templates
-                WHERE type = 'MAIL'
-                """
+                WHERE type = %s
+                """,
+                (type,)
             )
             results = cursor.fetchall()
             return results
@@ -360,3 +361,4 @@ def get_all_message_templates():
     finally:
         if connection:
             connection.close()
+
