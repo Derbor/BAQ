@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carnet Donante BAQ</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ef 100%);
+      font-family: 'Montserrat', Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .carnet-container {
+      perspective: 1000px;
+      max-width: 350px;
+      width: 100%;
+    }
+    
+    .carnet {
+      width: 100%;
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      transition: transform 0.6s, box-shadow 0.6s;
+      transform-style: preserve-3d;
+    }
+    
+    .carnet:hover {
+      transform: rotateY(5deg) translateY(-5px);
+      box-shadow: 0 15px 40px rgba(237, 111, 29, 0.2);
+    }
+    
+    .carnet-header {
+      background: linear-gradient(135deg, #ED6F1D 0%, #f39c5d 100%);
+      padding: 20px;
+      color: white;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .carnet-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+      z-index: 1;
+    }
+    
+    .logo {
+      position: relative;
+      z-index: 2;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .logo img {
+      height: 50px;
+      width: auto;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+    
+    .foto-container {
+      margin: -50px auto 20px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 5px solid white;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 5;
+      background-color: #f5f5f5;
+    }
+    
+    .foto {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background-size: cover;
+      background-position: center;
+    }
+    
+    .carnet-body {
+      padding: 10px 25px 25px;
+      text-align: center;
+    }
+    
+    .nombre {
+      font-size: 22px;
+      font-weight: 600;
+      margin: 10px 0;
+      color: #333;
+    }
+    
+    .tipo {
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+    
+    .estado {
+      background: linear-gradient(135deg, #ED6F1D 0%, #f39c5d 100%);
+      color: white;
+      padding: 8px 25px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 14px;
+      display: inline-block;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 10px rgba(237, 111, 29, 0.3);
+    }
+    
+    .estado i {
+      margin-right: 8px;
+    }
+    
+    .id-info {
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    .id-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    
+    .id-row:last-child {
+      margin-bottom: 0;
+    }
+    
+    .id-label {
+      color: #777;
+      font-weight: 500;
+    }
+    
+    .id-value {
+      color: #333;
+      font-weight: 600;
+    }
+    
+    .qr-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 15px;
+    }
+    
+    .qr {
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border-radius: 10px;
+      padding: 10px;
+      background: white;
+    }
+    
+    .barcode {
+      width: 100%;
+      height: 50px;
+      margin-top: 15px;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    
+    .watermark {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 10px;
+      color: rgba(0,0,0,0.1);
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+<div class="carnet-container">
+  <div class="carnet">
+    <div class="carnet-header">
+      <div class="logo">
+        <img id="logoImage" src="logo.png" alt="Logo BAQ">
+      </div>
+    </div>
+    
+    <div class="carnet-body">
+      <div class="foto-container">
+        <div class="foto" id="fotoPerfil"></div>
+      </div>
+      
+      <h2 class="nombre" id="nombreDonante">Nombre y Apellido</h2>
+      <div class="estado"><i class="fas fa-check-circle"></i>DONANTE ACTIVO</div>
+      
+      <div class="id-info">
+        <div class="id-row">
+          <span class="id-label">Expedición:</span>
+          <span class="id-value">05/04/30</span>
+        </div>
+        <div class="id-row">
+          <span class="id-label">Vigencia:</span>
+          <span class="id-value">05/04/30</span>
+        </div>
+      </div>
+      
+      <div class="qr-container">
+        <div class="qr" id="qrLink">
+          <!-- QR generado dinámicamente -->
+        </div>
+      </div>
+      
+      <div class="barcode" id="barcode"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Datos simulados desde una base de datos (ejemplo)
+  const datosDonante = {
+    nombre: "Horacio Olivo",
+    foto: "https://example.com/foto-carnet.jpg", // URL de la imagen del usuario
+    qr: "https://example.com/qr-donante-123456789",
+    codigo: "0123456789",
+    logo: "logo.png" // Archivo local del logo
+  };
+
+  // Aplicar datos al carnet
+  document.getElementById("nombreDonante").innerText = datosDonante.nombre;
+  
+  // Comprobamos si hay URL de foto, si no, usamos un placeholder
+  if (datosDonante.foto && datosDonante.foto !== "") {
+    document.getElementById("fotoPerfil").style.backgroundImage = `url('${datosDonante.foto}')`;
+  } else {
+    // Si no hay foto, mostrar un placeholder
+    document.getElementById("fotoPerfil").style.backgroundImage = "url('/api/placeholder/150/150')";
+  }
+  
+  // Establecer logo si existe
+  if (datosDonante.logo && datosDonante.logo !== "") {
+    document.getElementById("logoImage").src = datosDonante.logo;
+  }
+
+  // Insertar QR usando librería externa como QuickChart.io
+  const qrURL = `https://quickchart.io/qr?text=${encodeURIComponent(datosDonante.qr)}&size=120&dark=ED6F1D&margin=2`;
+  document.getElementById("qrLink").innerHTML = `<img src="${qrURL}" width="120" height="120" alt="QR de Donante">`;
+  
+  // Generar código de barras
+  const barcodeURL = `https://quickchart.io/chart?c={type:'bar',data:{datasets:[{data:[${datosDonante.codigo.split('').join(',')}]}]},options:{scales:{x:{display:false},y:{display:false}},plugins:{legend:{display:false}}}}`;
+  document.getElementById("barcode").style.backgroundImage = `url('${barcodeURL}')`;
+</script>
+
+</body>
+</html>
