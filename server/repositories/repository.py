@@ -1,6 +1,6 @@
 from database.DBConnection import postgresql_connection
 import hashlib, uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def email_exist(email):
     try:
@@ -210,3 +210,155 @@ def resume_subscription(email, status):
     except Exception as e:
         print("Error canceling the user subscription:", e)
         return None
+    
+def get_email_template(recurrent):
+    try:
+        connection = postgresql_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT mt.name, mt.content
+                FROM message_templates mt
+                WHERE mt.type = %s AND mt.recurrent = %s
+                """,
+                ("MAIL", recurrent)
+            )
+            result = cursor.fetchone()
+
+        connection.close()
+        return result
+    except Exception as e:
+        print("Error getting the email template: ", e)
+        return None
+    
+
+def get_subscribed_emails(date):
+    try:
+        connection = postgresql_connection()
+        one_month_ago = date - timedelta(days=30)
+        one_month_ago_date = one_month_ago.date()
+
+        print(one_month_ago_date)
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT u.email
+                FROM subscriptions s
+                JOIN users u ON u.subscription_id = s.id
+                WHERE u.recurrent = %s AND s.status = 'ACTIVE'
+                AND s.last_donation_at::date = DATE %s
+                """,
+                (True, one_month_ago_date,)
+            )
+            results = cursor.fetchall()
+            print(results)
+
+        connection.close()
+        emails = [row[0] for row in results]
+        print(emails)
+        return emails
+
+    except Exception as e:
+        print("Error getting subscribed emails:", e)
+        return []
+
+
+def get_not_subscribed_emails(date):
+    try:
+        connection = postgresql_connection()
+        one_month_ago = date - timedelta(days=30)
+        one_month_ago_date = one_month_ago.date()
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT u.email
+                FROM users u
+                WHERE u.recurrent = %s
+                AND u.updated_at::date = DATE %s
+                """,
+                (False, one_month_ago_date,)
+            )
+            results = cursor.fetchall()
+
+        connection.close()
+        emails = [row[0] for row in results]
+        return emails
+
+    except Exception as e:
+        print("Error getting subscribed emails:", e)
+        return []
+
+
+def create_template_command(content, name, recurrent, type):
+    try:
+        connection = postgresql_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                INSERT INTO message_templates (recurrent, type, name, content)
+                VALUES (%s, %s, %s, %s)
+                RETURNING id;
+                """,
+                (recurrent, type, name, content)
+            )
+            new_id = cursor.fetchone()[0]
+            connection.commit()
+            return new_id
+    except Exception as e:
+        print("Error creating message template:", e)
+        return None
+    finally:
+        if connection:
+            connection.close()
+
+
+def update_template_command(template_id, content, name, recurrent):
+    try:
+        connection = postgresql_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                UPDATE message_templates
+                SET content = %s, name = %s, recurrent = %s
+                WHERE id = %s
+                RETURNING id;
+                """,
+                (content, name, recurrent, template_id)
+            )
+            updated_id = cursor.fetchone()
+            if updated_id:
+                connection.commit()
+                return updated_id[0]
+            else:
+                return None
+    except Exception as e:
+        print("Error updating message template:", e)
+        return None
+    finally:
+        if connection:
+            connection.close()
+
+
+def get_all_message_templates_by_type(type):
+    try:
+        connection = postgresql_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT id, recurrent, type, name, content
+                FROM message_templates
+                WHERE type = %s
+                """,
+                (type,)
+            )
+            results = cursor.fetchall()
+            return results
+    except Exception as e:
+        print("Error getting message templates:", e)
+        return None
+    finally:
+        if connection:
+            connection.close()
+

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,6 +8,19 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
     
+    :root {
+      --primary-color: #ED6F1D;
+      --primary-light: #f39c5d;
+      --primary-dark: #d85600;
+      --shadow-sm: 0 2px 5px rgba(0,0,0,0.15);
+      --shadow-md: 0 5px 15px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 30px rgba(0,0,0,0.15);
+      --transition-standard: all 0.2s ease;
+      --radius-standard: 10px;
+      --radius-large: 16px;
+      --radius-full: 50px;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -34,9 +46,9 @@
     .carnet {
       width: 100%;
       background: white;
-      border-radius: 16px;
+      border-radius: var(--radius-large);
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      box-shadow: var(--shadow-lg);
       transition: transform 0.6s, box-shadow 0.6s;
       transform-style: preserve-3d;
     }
@@ -47,7 +59,7 @@
     }
     
     .carnet-header {
-      background: linear-gradient(135deg, #ED6F1D 0%, #f39c5d 100%);
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
       padding: 20px;
       color: white;
       text-align: center;
@@ -88,7 +100,7 @@
       border-radius: 50%;
       overflow: hidden;
       border: 5px solid white;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      box-shadow: var(--shadow-md);
       position: relative;
       z-index: 5;
       background-color: #f5f5f5;
@@ -98,8 +110,6 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      background-size: cover;
-      background-position: center;
     }
     
     .carnet-body {
@@ -124,10 +134,10 @@
     }
     
     .estado {
-      background: linear-gradient(135deg, #ED6F1D 0%, #f39c5d 100%);
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
       color: white;
       padding: 8px 25px;
-      border-radius: 50px;
+      border-radius: var(--radius-full);
       font-weight: 600;
       font-size: 14px;
       display: inline-block;
@@ -139,34 +149,135 @@
       margin-right: 8px;
     }
     
-    .id-info {
+    .nivel-container {
       background-color: #f8f9fa;
-      border-radius: 10px;
+      border-radius: var(--radius-standard);
       padding: 15px;
       margin-bottom: 20px;
       box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
     }
     
-    .id-row {
+    .nivel-label {
+      text-align: center;
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    
+    .progress-bar-container {
+      height: 16px;
+      background-color: #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      overflow: visible;
+      position: relative;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+      border-radius: 8px;
+      transition: width 0.5s ease;
+      position: relative;
+      width: 0;
+    }
+    
+    .fruta-pointer {
+      position: absolute;
+      font-size: 24px;
+      top: -16px;
+      right: -12px;
+      transition: left 0.5s ease;
+      z-index: 10;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+    }
+    
+    .nivel-markers {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 8px;
-      font-size: 13px;
+      padding: 0 2px;
+      margin-bottom: 12px;
     }
     
-    .id-row:last-child {
-      margin-bottom: 0;
+    .nivel-marker {
+      font-size: 16px;
+      position: relative;
     }
     
-    .id-label {
-      color: #777;
-      font-weight: 500;
+    .nivel-marker::before {
+      content: '';
+      position: absolute;
+      height: 5px;
+      width: 1px;
+      background-color: #aaa;
+      top: -10px;
+      left: 50%;
     }
     
-    .id-value {
-      color: #333;
+    .nivel-nombre {
+      text-align: center;
       font-weight: 600;
+      font-size: 15px;
+      color: var(--primary-color);
+      margin-bottom: 5px;
     }
+    
+    .nivel-descripcion {
+      text-align: center;
+      font-size: 12px;
+      color: #666;
+      font-style: italic;
+    }
+    
+    .social-share {
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+    
+    .share-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #333;
+    }
+    
+    .share-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .share-btn {
+      border: none;
+      border-radius: 6px;
+      padding: 10px 15px;
+      color: white;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: var(--transition-standard);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .share-btn i {
+      margin-right: 8px;
+      font-size: 16px;
+    }
+    
+    .share-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .share-btn.facebook { background-color: #3b5998; }
+    .share-btn.twitter { background-color: #1da1f2; }
+    .share-btn.whatsapp { background-color: #25d366; }
+    .share-btn.instagram { background-color: #bc1888; }
     
     .qr-container {
       display: flex;
@@ -176,19 +287,10 @@
     }
     
     .qr {
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      border-radius: 10px;
+      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius-standard);
       padding: 10px;
       background: white;
-    }
-    
-    .barcode {
-      width: 100%;
-      height: 50px;
-      margin-top: 15px;
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
     }
     
     .watermark {
@@ -198,6 +300,65 @@
       font-size: 10px;
       color: rgba(0,0,0,0.1);
       font-weight: 500;
+    }
+    
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+      overflow: auto;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background-color: white;
+      margin: auto;
+      padding: 20px;
+      border-radius: var(--radius-standard);
+      max-width: 90%;
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #777;
+    }
+    
+    .loading-indicator {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(0,0,0,0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border-left-color: var(--primary-color);
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
@@ -213,67 +374,235 @@
     
     <div class="carnet-body">
       <div class="foto-container">
-        <div class="foto" id="fotoPerfil"></div>
+        <img class="foto" id="fotoPerfil" src="perfil.jpg" alt="Foto del donante">
       </div>
       
       <h2 class="nombre" id="nombreDonante">Nombre y Apellido</h2>
+      <div class="tipo">COLABORADOR</div>
       <div class="estado"><i class="fas fa-check-circle"></i>DONANTE ACTIVO</div>
       
-      <div class="id-info">
-        <div class="id-row">
-          <span class="id-label">Expedición:</span>
-          <span class="id-value">05/04/30</span>
+      <div class="nivel-container">
+        <div class="nivel-label">Nivel <span id="nivelActual">3</span> de 5</div>
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="nivelProgress">
+            <span class="fruta-pointer" id="frutaPointer">🍊</span>
+          </div>
         </div>
-        <div class="id-row">
-          <span class="id-label">Vigencia:</span>
-          <span class="id-value">05/04/30</span>
+        <div class="nivel-markers">
+          <span class="nivel-marker">🌱</span>
+          <span class="nivel-marker">🚀</span>
+          <span class="nivel-marker">❤️</span>
+          <span class="nivel-marker">⚔️</span>
+          <span class="nivel-marker">🦸‍♀️</span>
         </div>
+        <div class="nivel-nombre" id="nivelNombre">Corazón Comprometido</div>
+        <div class="nivel-descripcion" id="nivelDescripcion">Eres el motor que sostiene nuestros sueños.</div>
       </div>
       
       <div class="qr-container">
         <div class="qr" id="qrLink">
-          <!-- QR generado dinámicamente -->
+          <!-- QR generated dynamically -->
         </div>
       </div>
       
       <div class="barcode" id="barcode"></div>
+      
+      <div class="social-share">
+        <h3 class="share-title">¡Comparte tu logro!</h3>
+        <div class="share-buttons">
+          <button class="share-btn facebook" id="shareButtonFacebook">
+            <i class="fab fa-facebook-f"></i> Facebook
+          </button>
+          <button class="share-btn twitter" id="shareButtonTwitter">
+            <i class="fab fa-twitter"></i> Twitter
+          </button>
+          <button class="share-btn whatsapp" id="shareButtonWhatsapp">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+          </button>
+          <button class="share-btn instagram" id="shareButtonInstagram">
+            <i class="fab fa-instagram"></i> Instagram
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- Modal to show sharing information -->
+<div id="shareModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeModal">&times;</span>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
 <script>
-  // Datos simulados desde una base de datos (ejemplo)
-  const datosDonante = {
-    nombre: "Horacio Olivo",
-    foto: "https://example.com/foto-carnet.jpg", // URL de la imagen del usuario
-    qr: "https://example.com/qr-donante-123456789",
-    codigo: "0123456789",
-    logo: "logo.png" // Archivo local del logo
+  // Cached DOM elements
+  const elements = {
+    nombreDonante: document.getElementById("nombreDonante"),
+    logoImage: document.getElementById("logoImage"),
+    nivelActual: document.getElementById("nivelActual"),
+    nivelProgress: document.getElementById("nivelProgress"),
+    nivelNombre: document.getElementById("nivelNombre"),
+    nivelDescripcion: document.getElementById("nivelDescripcion"),
+    frutaPointer: document.getElementById("frutaPointer"),
+    qrLink: document.getElementById("qrLink"),
+    shareModal: document.getElementById("shareModal"),
+    modalContent: document.getElementById("modalContent"),
+    closeModal: document.getElementById("closeModal"),
+    carnet: document.querySelector('.carnet')
   };
-
-  // Aplicar datos al carnet
-  document.getElementById("nombreDonante").innerText = datosDonante.nombre;
   
-  // Comprobamos si hay URL de foto, si no, usamos un placeholder
-  if (datosDonante.foto && datosDonante.foto !== "") {
-    document.getElementById("fotoPerfil").style.backgroundImage = `url('${datosDonante.foto}')`;
-  } else {
-    // Si no hay foto, mostrar un placeholder
-    document.getElementById("fotoPerfil").style.backgroundImage = "url('/api/placeholder/150/150')";
+  // Donor data (simulated from database)
+  const datosDonante = {
+    nombre: "Juan Pérez",
+    codigo: "0123456789",
+    logo: "logo.png",
+    nivel: 3 // Current donor level (1-5)
+  };
+  
+  // Level information
+  const nivelesInfo = [
+    {
+      nombre: "Semilla Solidaria",
+      emoji: "🌱",
+      descripcion: "Acabas de comenzar, ¡y ya estás haciendo crecer el cambio!",
+      fruta: "🍏" // Green apple for level 1
+    },
+    {
+      nombre: "Impulso Generoso",
+      emoji: "🚀",
+      descripcion: "Tu apoyo constante empieza a despegar y deja huella.",
+      fruta: "🍌" // Banana for level 2
+    },
+    {
+      nombre: "Corazón Comprometido",
+      emoji: "❤️",
+      descripcion: "Eres el motor que sostiene nuestros sueños.",
+      fruta: "🍊" // Orange for level 3
+    },
+    {
+      nombre: "Aliado Imparable",
+      emoji: "⚔️",
+      descripcion: "Tu constancia es una fuerza que transforma realidades.",
+      fruta: "🍇" // Grapes for level 4
+    },
+    {
+      nombre: "Héroe de Esperanza",
+      emoji: "🦸‍♀️",
+      descripcion: "Tu generosidad es legendaria. ¡Gracias por cambiar el mundo con nosotros!",
+      fruta: "🍓" // Strawberry for level 5
+    }
+  ];
+
+  // Initialize donor card
+  function initializeCard() {
+    // Apply data to the card
+    elements.nombreDonante.textContent = datosDonante.nombre;
+    
+    // Set logo if it exists
+    if (datosDonante.logo) {
+      elements.logoImage.src = datosDonante.logo;
+    }
+
+    // Configure progress bar according to level
+    const nivelIndex = datosDonante.nivel - 1; // Convert to 0-based index
+    elements.nivelActual.textContent = datosDonante.nivel;
+    const porcentaje = (datosDonante.nivel / 5) * 100;
+    
+    // Set current level info
+    elements.nivelNombre.textContent = nivelesInfo[nivelIndex].nombre;
+    elements.nivelDescripcion.textContent = nivelesInfo[nivelIndex].descripcion;
+    elements.frutaPointer.textContent = nivelesInfo[nivelIndex].fruta;
+
+    // Insert QR using external library like QuickChart.io
+    const qrURL = `https://quickchart.io/qr?text=${encodeURIComponent('https://www.baq.ec')}&size=120&dark=ED6F1D&margin=2`;
+    elements.qrLink.innerHTML = `<img src="${qrURL}" width="120" height="120" alt="QR de Donante">`;
+    
+    // Animate the fruit when loading the page
+    setTimeout(() => {
+      elements.nivelProgress.style.width = porcentaje + '%';
+    }, 500);
   }
   
-  // Establecer logo si existe
-  if (datosDonante.logo && datosDonante.logo !== "") {
-    document.getElementById("logoImage").src = datosDonante.logo;
+  // Show modal
+  function mostrarModal() {
+    elements.shareModal.style.display = 'flex';
   }
-
-  // Insertar QR usando librería externa como QuickChart.io
-  const qrURL = `https://quickchart.io/qr?text=${encodeURIComponent(datosDonante.qr)}&size=120&dark=ED6F1D&margin=2`;
-  document.getElementById("qrLink").innerHTML = `<img src="${qrURL}" width="120" height="120" alt="QR de Donante">`;
   
-  // Generar código de barras
-  const barcodeURL = `https://quickchart.io/chart?c={type:'bar',data:{datasets:[{data:[${datosDonante.codigo.split('').join(',')}]}]},options:{scales:{x:{display:false},y:{display:false}},plugins:{legend:{display:false}}}}`;
-  document.getElementById("barcode").style.backgroundImage = `url('${barcodeURL}')`;
+  // Close modal
+  function cerrarModal() {
+    elements.shareModal.style.display = 'none';
+  }
+  
+  // Share on social networks directly
+  function compartirEnRed(red) {
+    const nombre = elements.nombreDonante.textContent;
+    const nivel = elements.nivelActual.textContent;
+    const nivelNombre = elements.nivelNombre.textContent;
+    const mensaje = `¡He alcanzado el nivel ${nivel} (${nivelNombre}) como donante en BAQ! 🎉 Únete tú también y ayuda a cambiar vidas.`;
+    const url = "https://www.baq.ec"; // Update with your actual website URL
+    
+    let shareUrl = '';
+    let networkName = '';
+    
+    switch(red) {
+      case 'facebook':
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(mensaje)}`;
+        networkName = 'Facebook';
+        break;
+      case 'twitter':
+        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(mensaje)}&url=${encodeURIComponent(url)}`;
+        networkName = 'Twitter';
+        break;
+      case 'whatsapp':
+        shareUrl = `https://wa.me/?text=${encodeURIComponent(mensaje + ' ' + url)}`;
+        networkName = 'WhatsApp';
+        break;
+      case 'instagram':
+        // Instagram doesn't have a direct sharing URL, show instructions
+        mostrarModal();
+        elements.modalContent.innerHTML = `
+          <h3>Compartir en Instagram</h3>
+          <p>Instagram no permite compartir directamente. Por favor:</p>
+          <ol style="text-align: left; padding-left: 20px;">
+            <li>Toma una captura de pantalla de tu carnet</li>
+            <li>Abre Instagram y crea una nueva publicación</li>
+            <li>Sube la captura guardada</li>
+            <li>Añade el siguiente texto:</li>
+          </ol>
+          <textarea readonly style="width: 100%; padding: 10px; margin: 10px 0; height: 80px;">${mensaje}</textarea>
+          <button onclick="window.open('https://www.instagram.com/', '_blank')" class="share-btn instagram" style="margin: 10px auto; display: block;">
+            <i class="fab fa-instagram"></i> Ir a Instagram
+          </button>
+        `;
+        return;
+        break;
+    }
+    
+    // For other networks, open in new window
+    if (shareUrl) {
+      window.open(shareUrl, '_blank');
+    }
+  }
+  
+  // Event Listeners
+  function setupEventListeners() {
+    // Share buttons
+    document.getElementById('shareButtonFacebook').addEventListener('click', () => compartirEnRed('facebook'));
+    document.getElementById('shareButtonTwitter').addEventListener('click', () => compartirEnRed('twitter'));
+    document.getElementById('shareButtonWhatsapp').addEventListener('click', () => compartirEnRed('whatsapp'));
+    document.getElementById('shareButtonInstagram').addEventListener('click', () => compartirEnRed('instagram'));
+    
+    // Close modal button
+    elements.closeModal.addEventListener('click', cerrarModal);
+  }
+  
+  // Initialize app
+  document.addEventListener('DOMContentLoaded', () => {
+    initializeCard();
+    setupEventListeners();
+  });
 </script>
 
 </body>

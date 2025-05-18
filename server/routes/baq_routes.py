@@ -94,3 +94,47 @@ def resume_subscription():
     if serviceResponse == None:
         return jsonify({'ERROR': "THE SUBSCRIPTION WAS NOT RESUMED"}), 400
     return jsonify({'RESPONSE': serviceResponse}), 200
+
+
+@app.route('/mails', methods=['POST'])
+def get_emails_by_category():
+    data = request.json
+    recurrent = data.get("recurrent", None)
+
+    serviceResponse = baqService.get_email_data(recurrent)
+    return jsonify(serviceResponse), 200
+
+@app.route('/create-template', methods=['POST'])
+def create_template():
+    data = request.json
+    type = data.get("type")
+    content = data.get("content", "")
+    name = data.get("name", "")
+    recurrent = data.get("recurrent", False)
+
+    serviceResponse = baqService.create_template(content, name, recurrent, type)
+    return jsonify(serviceResponse), 200
+
+@app.route('/edit-template', methods=['PUT'])
+def edit_template():
+    data = request.json
+    template_id = data.get("id", None)
+    content = data.get("content", "")
+    name = data.get("name", "")
+    recurrent = data.get("recurrent", False)
+
+    if template_id is None:
+        return jsonify({"Error" : "ESTE TEMPLATE NO EXISTE"}), 400
+
+    serviceResponse = baqService.update_template(template_id, content, name, recurrent)
+    return jsonify(serviceResponse), 200
+
+@app.route('/get-all-templates', methods=['GET'])
+def get_all_templates():
+    type = request.args.get("type", None)
+
+    if type is None:
+        return jsonify({"Error" : "NO TEMPLATE TYPE WAS PROVIDEN"}), 400
+    
+    serviceResponse = baqService.get_templates(type)
+    return jsonify(serviceResponse), 200
