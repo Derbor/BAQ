@@ -1,6 +1,6 @@
 from database.DBConnection import postgresql_connection
 import hashlib, uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def email_exist(email):
     try:
@@ -210,3 +210,83 @@ def resume_subscription(email, status):
     except Exception as e:
         print("Error canceling the user subscription:", e)
         return None
+    
+def get_email_template(recurrent):
+    try:
+        connection = postgresql_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT mt.name, mt.content
+                FROM message_templates mt
+                WHERE mt.type = %s AND mt.recurrent = %s
+                """,
+                ("MAIL", recurrent)
+            )
+            result = cursor.fetchone()
+
+        connection.close()
+        return result
+    except Exception as e:
+        print("Error getting the email template: ", e)
+        return None
+    
+
+def get_subscribed_emails(date):
+    try:
+        connection = postgresql_connection()
+        one_month_ago = date - timedelta(days=30)
+        one_month_ago_date = one_month_ago.date()
+
+        print(one_month_ago_date)
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT u.email
+                FROM subscriptions s
+                JOIN users u ON u.subscription_id = s.id
+                WHERE u.recurrent = %s AND s.status = 'ACTIVE'
+                AND s.last_donation_at::date = DATE %s
+                """,
+                (True, one_month_ago_date,)
+            )
+            results = cursor.fetchall()
+            print(results)
+
+        connection.close()
+        emails = [row[0] for row in results]
+        print(emails)
+        return emails
+
+    except Exception as e:
+        print("Error getting subscribed emails:", e)
+        return []
+
+
+def get_not_subscribed_emails(date):
+    try:
+        connection = postgresql_connection()
+        one_month_ago = date - timedelta(days=30)
+        one_month_ago_date = one_month_ago.date()
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT u.email
+                FROM users u
+                WHERE u.recurrent = %s
+                AND u.updated_at::date = DATE %s
+                """,
+                (False, one_month_ago_date,)
+            )
+            results = cursor.fetchall()
+
+        connection.close()
+        emails = [row[0] for row in results]
+        return emails
+
+    except Exception as e:
+        print("Error getting subscribed emails:", e)
+        return []
+

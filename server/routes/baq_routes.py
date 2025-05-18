@@ -94,3 +94,12 @@ def resume_subscription():
     if serviceResponse == None:
         return jsonify({'ERROR': "THE SUBSCRIPTION WAS NOT RESUMED"}), 400
     return jsonify({'RESPONSE': serviceResponse}), 200
+
+
+@app.route('/mails', methods=['POST'])
+def get_emails_by_category():
+    data = request.json
+    recurrent = data.get("recurrent", None)
+
+    serviceResponse = baqService.get_email_data(recurrent)
+    return jsonify(serviceResponse), 200
