@@ -2,87 +2,148 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Historia del Mes</title>
+  <title>Historia del Mes - BAQ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&family=Montserrat:wght@600&display=swap">
   <style>
-body {
-  font-family: sans-serif;
-  padding: 2rem;
-  background: #fafafa;
-  color: #333;
-  margin: 0;
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0;
+      font-family: "Poppins", sans-serif;
+      background: #fafafa; color: #333;
+    }
+    h1, h2, h3 {
+      font-family: "Montserrat", sans-serif;
+    }
+    .container, .container--small {
+      width: 100%;
+      max-width: 1344px;
+      padding-inline: 16px;
+      margin-inline: auto;
+    }
+    .container--small { max-width: 662px; }
+    .split {
+      display: flex; flex-direction: column; gap: 16px; margin-block: 2rem;
+    }
+    .split > * { flex-grow: 1; }
+    @media (min-width: 720px) {
+      .split { flex-direction: row; align-items: center; }
+      .container { padding-inline: 32px; }
+    }
+
+    .floating-donate-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #2f3388;
+  color: #f6f6f6;
+  padding: 14px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 16px;
+  font-family: "Monsterrat", sans-serif;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  transition: background-color 0.3s ease;
 }
 
-#story-container {
-  background: white;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  margin-bottom: 4rem;
+.floating-donate-button:hover {
+  background-color: #1f2155;
 }
 
-/* Donation Button Container */
-#donation-buttons {
-  text-align: center;
-  margin-top: 2rem;
-}
-
-/* Shared button styles */
-#donate-monthly-button,
-#donate-now-button {
-  display: block;
-  margin: 1rem auto;
-  padding: 1rem 2rem;
-  font-size: 1.1rem;
-  width: 250px;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* Specific styles */
-#donate-monthly-button {
-  background-color: #28a745;
-}
-
-#donate-now-button {
-  background-color: #dc3545;
-}
-
-#donate-monthly-button:hover {
-  background-color: #218838;
-}
-
-#donate-now-button:hover {
-  background-color: #c82333;
-}
-
+    .header-simple {
+      background-color: #ed6f1d; color: #f6f6f6;
+      display: flex; justify-content: space-between;
+      align-items: center; padding: 1rem 2rem;
+    }
+    .header-simple img { height: 40px; }
+    .results {
+      border: 2px solid #2f3388;
+      border-radius: 6px;
+      padding: 16px;
+      color: #2f3388;
+      background: #fff;
+    }
+    .primary-section { background-color: #ed6f1d; color: #fff; padding: 2rem 0; }
+    .secondary-section { background-color: #2f3388; color: #fff; padding: 1rem; }
+    .gallery {
+      display: flex; overflow-x: scroll; gap: 16px; padding: 16px;
+    }
+    .gallery-img { width: 300px; border-radius: 8px; }
+    .btn {
+      display: inline-block;
+      border-radius: 6px;
+      padding: 12px 48px;
+      text-align: center;
+      font-size: 18px;
+      font-family: "Montserrat", sans-serif;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 1rem;
+    }
+    .btn--primary { background: #ed6f1d; color: #fff; }
+    .btn--secondary { background: #2f3388; color: #fff; }
+    footer { text-align: center; padding: 2rem; }
   </style>
 </head>
 <body>
-  <h1 style="text-align: center;">Historia del Mes</h1>
+  <header class="header-simple">
+    <a href="https://www.baq.ec/donar-baq/"><img src="img/logo-baq.png" alt="logo" /></a>
+    <a href="https://www.baq.ec/donar-baq/" class="btn btn--secondary">Dona ahora</a>
+  </header>
 
-<h2 id="greeting" style="text-align: center; font-weight: normal;">Hola.</h2>
-<h3 id="donation-amount" style="text-align: center; font-weight: normal; color: #555;"></h3>
+  <section>
+    <div class="container split">
+      <div>
+        <h2 id="greeting">Hola, amig@</h2>
+        <p>Gracias por tu donación al Banco de Alimentos de Quito</p>
+      </div>
+      <div class="results">
+        <h3 class="secondary-section">Resultados del Mes</h3>
+        <p id="donation-amount">Cargando tu donación...</p>
+      </div>
+    </div>
+  </section>
 
+  <section class="primary-section">
+    <div class="container">
+      <h2>Conoce el impacto de tus donaciones</h2>
+    </div>
+  </section>
 
+<section id="historia">
+  <div class="container--small">
+    <h2>San José - Asilo del Adulto Mayor</h2>
+  </div>
 
-  <div id="story-container">
+  <!-- 🔽 Add this line to inject dynamic content -->
+  <div id="story-container" class="container--small">
     <p>Cargando historia...</p>
   </div>
 
-<div style="text-align: center; margin-top: 2rem;">
-  <button id="donate-monthly-button" onclick="window.location.href='https://donar.ejemplo.com/mensual'">
-    ❤️ Donar Mensualmente
-  </button>
-
-  <button id="donate-now-button" onclick="window.location.href='https://donar.ejemplo.com/unica'">
-    💸 Donar Ahora
-  </button>
-</div>
+  <div class="gallery">
+    ...
+  </div>
 
 
+  <section>
+    <div class="container split">
+      <div>
+        <p class="small-p">
+          Puedes configurar una donación automática mensual. ¡Es clave para nosotros!
+        </p>
+        <a class="btn btn--primary" href="https://donar.andresgaibor.trade/">Donación automática</a>
+      </div>
+      <div>
+        <img src="img/dona-img.png" alt="dona" />
+      </div>
+    </div>
+  </section>
+
+<a href="https://donar.andresgaibor.trade/" class="floating-donate-button">
+  💸 Donar Ahora
+</a>
   <script src="./historia_loader.js" defer></script>
 </body>
 </html>
