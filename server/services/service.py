@@ -32,7 +32,6 @@ class BAQService:
         #SEND OF EMAIL FOR TESTING PURPOSES
         emailSubject, emailBody  = get_email_template(False)
         emailData = {"emails" : [email], "subject": emailSubject, "body": emailBody}
-        print(emailSubject)
         self.send_email(emailData)
 
         return "TRANSACTION CREATED", new_transaction_id
@@ -74,7 +73,7 @@ class BAQService:
         return get_all_message_templates_by_type(type)
     
     def send_email(self, payload):
-        url = 'http://localhost:3000/correo'
+        url = 'https://mail.andresgaibor.trade/correo'
         try:
             response = requests.post(url, json=payload)
             response.raise_for_status()

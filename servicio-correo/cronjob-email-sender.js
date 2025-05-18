@@ -4,7 +4,7 @@ dotenv.config();
 
 async function sendEmails(data) {
   try {
-    const response = await fetch('http://localhost:3000/correo', {
+    const response = await fetch('https://mail.andresgaibor.trade/correo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)

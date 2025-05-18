@@ -256,7 +256,6 @@ def get_subscribed_emails(date):
 
         connection.close()
         emails = [row[0] for row in results]
-        print(emails)
         return emails
 
     except Exception as e:

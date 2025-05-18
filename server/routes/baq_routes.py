@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from services.service import BAQService
+from services.email_service import send_emails
 from models.user import User
 
 app = Blueprint('baq_blueprint', __name__)
