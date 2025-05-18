@@ -80,3 +80,7 @@ class BAQService:
             print("Código de estado:", response.status_code)
         except requests.exceptions.RequestException as e:
             print("Error al enviar el correo:", e)
+
+
+    def get_data_of_analitics(self):
+        return obtener_montos_por_usuario()

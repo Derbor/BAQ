@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify
 from services.service import BAQService
-from services.email_service import send_emails
 from models.user import User
 
 app = Blueprint('baq_blueprint', __name__)
@@ -141,4 +140,10 @@ def get_all_templates():
         return jsonify({"Error" : "NO TEMPLATE TYPE WAS PROVIDEN"}), 400
     
     serviceResponse = baqService.get_templates(type)
+    return jsonify(serviceResponse), 200
+
+
+@app.route('/analitics', methods=['GET'])
+def get_analitics():
+    serviceResponse = baqService.get_data_of_analitics()
     return jsonify(serviceResponse), 200
