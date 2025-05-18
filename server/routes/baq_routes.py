@@ -141,3 +141,9 @@ def get_all_templates():
     
     serviceResponse = baqService.get_templates(type)
     return jsonify(serviceResponse), 200
+
+
+@app.route('/analitics', methods=['GET'])
+def get_analitics():
+    serviceResponse = baqService.get_data_of_analitics()
+    return jsonify(serviceResponse), 200

@@ -1,6 +1,8 @@
 from database.DBConnection import postgresql_connection
 import hashlib, uuid
 from datetime import datetime, timedelta
+from collections import defaultdict
+from decimal import Decimal
 
 def email_exist(email):
     try:
@@ -256,7 +258,6 @@ def get_subscribed_emails(date):
 
         connection.close()
         emails = [row[0] for row in results]
-        print(emails)
         return emails
 
     except Exception as e:
@@ -362,3 +363,111 @@ def get_all_message_templates_by_type(type):
         if connection:
             connection.close()
 
+
+def obtener_montos_por_usuario():
+    try:
+        connection = postgresql_connection()
+        cursor = connection.cursor()
+
+        query = """
+        SELECT 
+            u.id,
+            u.name,
+            u.email,
+            COALESCE(SUM(t.amount), 0) AS total_amount
+        FROM users u
+        LEFT JOIN transactions t ON t.user_id = u.id
+        GROUP BY u.id, u.name, u.email
+        ORDER BY u.name;
+        """
+
+        cursor.execute(query)
+        results = cursor.fetchall()
+
+        montos_por_usuario = {}
+
+        for user_id, user_name, user_email, total_amount in results:
+            montos_por_usuario[user_id] = {
+                "name": user_name,
+                "email": user_email,
+                "total_amount": total_amount
+            }
+
+        return montos_por_usuario
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return {}
+
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'connection' in locals():
+            connection.close()
+
+    try:
+        connection = postgresql_connection()
+        cursor = connection.cursor()
+
+        query = """
+        SELECT 
+            COALESCE(u.name, 'Anónimo') AS user_name,
+            COALESCE(s.id, 0) AS subscription_id,
+            t.amount
+        FROM transactions t
+        LEFT JOIN users u ON t.user_id = u.id
+        LEFT JOIN subscriptions s ON u.subscription_id = s.id;
+        """
+
+        cursor.execute(query)
+        results = cursor.fetchall()
+
+        montos_por_usuario = defaultdict(Decimal)
+
+        for user_name, subscription_id, amount in results:
+            key = user_name if subscription_id != 0 else 'Anónimo'
+            montos_por_usuario[key] += amount
+
+        print(montos_por_usuario)
+        return dict(montos_por_usuario)
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return {}
+
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'connection' in locals():
+            connection.close()
+    try:
+        connection = postgresql_connection()
+        cursor = conn.cursor()
+
+        # Consulta para obtener montos y datos de usuario
+        query = """
+        SELECT 
+            COALESCE(u.name, 'Anónimo') AS user_name,
+            COALESCE(s.id, 0) AS subscription_id,
+            t.amount
+        FROM transactions t
+        LEFT JOIN users u ON t.user_id = u.id
+        LEFT JOIN subscriptions s ON u.subscription_id = s.id;
+        """
+
+        cursor.execute(query)
+        results = cursor.fetchall()
+
+        # Agrupación por nombre o 'Anónimo'
+        montos_por_usuario = defaultdict(Decimal)
+
+        for user_name, subscription_id, amount in results:
+            key = user_name if subscription_id != 0 else 'Anónimo'
+            montos_por_usuario[key] += amount
+
+        print(montos_por_usuario)
+        return dict(montos_por_usuario)
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return {}

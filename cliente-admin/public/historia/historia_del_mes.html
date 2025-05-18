@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Historia del Mes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+body {
+  font-family: sans-serif;
+  padding: 2rem;
+  background: #fafafa;
+  color: #333;
+  margin: 0;
+}
+
+#story-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  margin-bottom: 4rem;
+}
+
+/* Donation Button Container */
+#donation-buttons {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* Shared button styles */
+#donate-monthly-button,
+#donate-now-button {
+  display: block;
+  margin: 1rem auto;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  width: 250px;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Specific styles */
+#donate-monthly-button {
+  background-color: #28a745;
+}
+
+#donate-now-button {
+  background-color: #dc3545;
+}
+
+#donate-monthly-button:hover {
+  background-color: #218838;
+}
+
+#donate-now-button:hover {
+  background-color: #c82333;
+}
+
+  </style>
+</head>
+<body>
+  <h1 style="text-align: center;">Historia del Mes</h1>
+
+<h2 id="greeting" style="text-align: center; font-weight: normal;">Hola.</h2>
+<h3 id="donation-amount" style="text-align: center; font-weight: normal; color: #555;"></h3>
+
+
+
+  <div id="story-container">
+    <p>Cargando historia...</p>
+  </div>
+
+<div style="text-align: center; margin-top: 2rem;">
+  <button id="donate-monthly-button" onclick="window.location.href='https://donar.ejemplo.com/mensual'">
+    ❤️ Donar Mensualmente
+  </button>
+
+  <button id="donate-now-button" onclick="window.location.href='https://donar.ejemplo.com/unica'">
+    💸 Donar Ahora
+  </button>
+</div>
+
+
+  <script src="./historia_loader.js" defer></script>
+</body>
+</html>
