@@ -2,6 +2,8 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import PpxButton from './components/PpxButton'
+import { data } from './configuration/ppx.data'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -18,6 +20,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
+        <PpxButton data={data} />
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
