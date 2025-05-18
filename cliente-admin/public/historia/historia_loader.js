@@ -18,3 +18,10 @@ fetch('/api/historia-del-mes')
   .catch(err => {
     document.getElementById('story-body').innerHTML = '<p>Error al cargar la historia.</p>';
   });
+
+  document.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("historia-container");
+  const html = localStorage.getItem("historiaDelMesContent");
+
+  container.innerHTML = html || "<p>No hay historia publicada aún.</p>";
+});
