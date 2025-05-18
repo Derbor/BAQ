@@ -4,9 +4,10 @@ interface MontoSectionProps {
   monto: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onPresetClick: (valor: string) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
-const MontoSection: React.FC<MontoSectionProps> = ({ monto, onChange, onPresetClick }) => {
+const MontoSection: React.FC<MontoSectionProps> = ({ monto, onChange, onPresetClick, onBlur }) => {
   return (
     <div className="p-8 space-y-6 bg-white transition-all duration-300 ease-in-out animate-fadeIn">
       <div>
@@ -21,6 +22,7 @@ const MontoSection: React.FC<MontoSectionProps> = ({ monto, onChange, onPresetCl
             type="number"
             name="monto"
             id="monto"
+            onBlur={onBlur}
             autoFocus
             value={monto}
             onChange={onChange}
@@ -33,7 +35,12 @@ const MontoSection: React.FC<MontoSectionProps> = ({ monto, onChange, onPresetCl
             <button
               key={val}
               type="button"
-              onClick={() => onPresetClick(val)}
+              // onBlur={onBlur}
+              onClick={() => {
+                onPresetClick(val);
+                document.getElementById('monto')?.focus();
+
+              }}
               className={`px-6 py-3 cursor-pointer border-2 rounded-lg text-lg font-medium transition-all ${
                 monto === val 
                   ? 'bg-orange-100 text-orange-700 border-orange-500 shadow-md transform scale-105' 

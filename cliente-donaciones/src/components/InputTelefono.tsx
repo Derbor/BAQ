@@ -12,12 +12,14 @@ interface InputTelefonoProps {
   required?: boolean;
   autoFocus?: boolean;
   isOptional?: boolean;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 export default function InputTelefono({ 
   id = "phone", 
   label = "", 
   onChange, 
+  onBlur,
   placeholder = "Número de teléfono",
   required = false,
   autoFocus = false,
@@ -251,6 +253,9 @@ export default function InputTelefono({
           id={id}
           name={id}
           type="tel" 
+          onBlur={onBlur}
+          maxLength={10}
+          minLength={9}
           placeholder={placeholder}
           required={required}
           autoFocus={autoFocus}
