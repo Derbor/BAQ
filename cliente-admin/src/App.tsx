@@ -8,7 +8,7 @@ function App() {
 
   return (
     <main className="app-container">
-      <h1>🚧 Dashboard Marketing</h1>
+      <h1>Dashboard Marketing</h1>
 
       <div style={{ marginBottom: '1rem' }}>
         <button onClick={() => setActiveView('mensajes')} style={{ marginRight: '1rem' }}>

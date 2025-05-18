@@ -1,27 +1,25 @@
-fetch('/api/historia-del-mes')
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById('story-title').textContent = data.title;
-    document.getElementById('story-date').textContent = new Date(data.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
-    document.getElementById('story-body').innerHTML = data.content;
+document.addEventListener("DOMContentLoaded", async () => {
+  const container = document.getElementById("story-container");
 
-    if (data.imageUrl) {
-      document.getElementById('story-media').innerHTML = `
-        <img src="${data.imageUrl}" alt="Imagen del mes" />
-      `;
-    } else if (data.videoUrl) {
-      document.getElementById('story-media').innerHTML = `
-        <iframe src="${data.videoUrl}" frameborder="0" allowfullscreen></iframe>
-      `;
+  try {
+    const res = await fetch("http://162.243.77.211:8081/get-all-templates?type=MAIL");
+    const data = await res.json();
+
+    console.log("✅ Plantillas recibidas:", data);
+
+    // Find the latest "Historia del Mes"
+    const historia = data
+      .filter(t => t[3] === "Historia del Mes")
+      .sort((a, b) => b[0] - a[0]) // Sort by ID descending
+      [0]; // Take the most recent one
+
+    if (historia && historia[4]) {
+      container.innerHTML = historia[4];
+    } else {
+      container.innerHTML = "<p>No hay historia disponible aún.</p>";
     }
-  })
-  .catch(err => {
-    document.getElementById('story-body').innerHTML = '<p>Error al cargar la historia.</p>';
-  });
-
-  document.addEventListener("DOMContentLoaded", () => {
-  const container = document.getElementById("historia-container");
-  const html = localStorage.getItem("historiaDelMesContent");
-
-  container.innerHTML = html || "<p>No hay historia publicada aún.</p>";
+  } catch (err) {
+    console.error("❌ Error al cargar la historia:", err);
+    container.innerHTML = "<p>Error al conectar con el servidor.</p>";
+  }
 });

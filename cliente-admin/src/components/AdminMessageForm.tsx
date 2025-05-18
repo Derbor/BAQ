@@ -33,29 +33,10 @@ export const AdminMessageForm: React.FC = () => {
   const [htmlContent, setHtmlContent] = useState('');
 
 
-const handleSave = async () => {
-  const payload = {
-    html: previewHtml
-  };
-
-  try {
-    const res = await fetch('/api/save-historia-html', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    if (res.ok) {
-      alert('✅ Historia guardada correctamente.');
-    } else {
-      alert('❌ Error al guardar la historia.');
-    }
-  } catch (err) {
-    alert('❌ Error de red al guardar.');
-    console.error(err);
-  }
+const handleSave = () => {
+  localStorage.setItem('historiaDelMesContent', htmlContent);
+  setStatus('✅ Historia del Mes guardada.');
 };
-
 
 
 useEffect(() => {
