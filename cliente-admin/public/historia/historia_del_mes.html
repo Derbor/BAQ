@@ -31,6 +31,27 @@
       .container { padding-inline: 32px; }
     }
 
+    .floating-donate-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #2f3388;
+  color: #f6f6f6;
+  padding: 14px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 16px;
+  font-family: "Monsterrat", sans-serif;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  transition: background-color 0.3s ease;
+}
+
+.floating-donate-button:hover {
+  background-color: #1f2155;
+}
+
     .header-simple {
       background-color: #ed6f1d; color: #f6f6f6;
       display: flex; justify-content: space-between;
@@ -120,10 +141,9 @@
     </div>
   </section>
 
-  <footer>
-    <a href="https://donar.andresgaibor.trade/" class="btn btn--secondary">💸 Donar Ahora</a>
-  </footer>
-
+<a href="https://donar.andresgaibor.trade/" class="floating-donate-button">
+  💸 Donar Ahora
+</a>
   <script src="./historia_loader.js" defer></script>
 </body>
 </html>
