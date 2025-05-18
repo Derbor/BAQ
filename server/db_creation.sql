@@ -20,6 +20,9 @@ CREATE TABLE transactions (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     amount NUMERIC NOT NULL,
+    last_card_digits VARCHAR(4),
+    device_footprint VARCHAR(255),
+    transaction_ip VARCHAR(50),
     status VARCHAR(50),
     subscription_id INTEGER NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

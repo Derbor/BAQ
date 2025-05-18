@@ -25,11 +25,14 @@ def donate():
     data = request.json
     email = data.get("email", None)
     amount = data.get("amount", 0)
+    last_card_digits = data.get("last_card_digits", "")
+    device_footprint = data.get("device_footprint", "")
+    transaction_ip = data.get("transaction_ip", "")
 
     if amount < 1:
         return jsonify({'ERROR': 'Donations must have to be greater than $1 dollar'}), 400
 
-    serviceResponse = baqService.create_transaction(email, amount)
+    serviceResponse = baqService.create_transaction(email, amount, last_card_digits, device_footprint, transaction_ip)
     return jsonify({'RESPONSE': serviceResponse[0]}), 200
 
 

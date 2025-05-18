@@ -59,7 +59,7 @@ def create_subscription_query(type, status, created_at):
         return None
 
 
-def create_transaction_query(amount, status, user_id, subscription_id=None):
+def create_transaction_query(amount, status, user_id, subscription_id=None, last_card_digits=None, device_footprint=None, transaction_ip=None):
     try:
         connection = postgresql_connection()
         new_transaction_id = None
@@ -67,11 +67,11 @@ def create_transaction_query(amount, status, user_id, subscription_id=None):
             created_at = datetime.now()
             cursor.execute(
                 """
-                INSERT INTO transactions (user_id, amount, status, subscription_id, created_at)
-                VALUES (%s, %s, %s, %s, %s)
+                INSERT INTO transactions (user_id, amount, status, subscription_id, created_at, last_card_digits, device_footprint, transaction_ip)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING id;
                 """,
-                (user_id, amount, status, subscription_id, created_at)
+                (user_id, amount, status, subscription_id, created_at, last_card_digits, device_footprint, transaction_ip)
             )
             new_transaction_id = cursor.fetchone()[0]
 
