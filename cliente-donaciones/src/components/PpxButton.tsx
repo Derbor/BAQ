@@ -23,6 +23,7 @@ const PpxButton = ({ data }: { data: any }) => {
     useEffect(() => {
         iniciarDatos(data);
     }, [data]);
+    
     return (
         <>
             <div id="modalPaybox"></div>

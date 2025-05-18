@@ -1,6 +1,19 @@
+// src/configuration/ppx.data.ts
+
+/**
+ * Default configuration data for PagoPlux.
+ * The onAuthorize function defined here is a global-style callback.
+ * In a React component, you might define a component-specific callback.
+ */
+
+// If you use toast, ensure it's imported and configured in your app.
 // import toast from "react-hot-toast";
 
-let data = {
+// If jQuery is used, ensure it's globally available when this onAuthorize is called.
+// Consider alternatives for DOM manipulation within a React context.
+declare var jQuery: any; // Declare jQuery if it's expected to be global
+
+const data = {
     /* Requerido. Email de la cuenta PagoPlux del Establecimiento */
     PayboxRemail: "abautista@pagoplux.com",
 
@@ -16,112 +29,60 @@ let data = {
     /* Requerido. Monto total de productos o servicios que no aplican impuestos, máximo 2 decimales. Ejemplo: 100.00, 10.00, 1.00 */
     PayboxBase0: "10.00",
 
-    /* Requerido. Monto total de productos o servicios que aplican impuestos, el valor debe incluir el impuesto, máximo 2 decimales. Ejemplo: 100.00, 10.00, 1.00 posee el valor de los productos con su impuesto incluido */
-    PayboxBase12: "10.00",
+    /* Requerido. Monto total de productos o servicios que aplican impuestos, el valor debe incluir el impuesto, máximo 2 decimales. Ejemplo: 100.00, 10.00, 1.00 */
+    PayboxBase12: "0.00", // Consistent formatting
 
     /* Requerido. Descripción del pago */
     PayboxDescription: "Prueba de plux",
 
-    /* Requerido Tipo de Ejecución
-     * Production: true (Modo Producción, Se procesarán cobros y se
-       cargarán al sistema, afectará a la tdc)
-     * Production: false (Modo Prueba, se realizarán cobros de prueba y no  
-       se guardará ni afectará al sistema)
-    */
+    /* Requerido Tipo de Ejecución */
     PayboxProduction: false,
 
-    /* Requerido Ambiente de ejecución
-     * prod: Modo Producción, Se procesarán cobros y se cargarán al sistema,   afectará a la tdc.
-     * sandbox: Modo Prueba, se realizarán cobros de prueba
-    */
+    /* Requerido Ambiente de ejecución */
     PayboxEnvironment: "sandbox",
 
-    /* Requerido. Lenguaje del Paybox
-     * Español: es | (string) (Paybox en español)
-    */
+    /* Requerido. Lenguaje del Paybox */
     PayboxLanguage: "es",
-    /* Requerido. Identifica el tipo de iframe de pagoplux por defecto true
-*/
+
+    /* Requerido. Identifica el tipo de iframe de pagoplux por defecto true */
     PayboxPagoPlux: true,
 
-    /*
-      * Requerido. dirección del tarjetahabiente
-    */
+    /* Requerido. dirección del tarjetahabiente */
     PayboxDirection: "Riobamba",
 
-    /*
-      * Requerido. Teléfono del tarjetahabiente
-    */
+    /* Requerido. Teléfono del tarjetahabiente */
     PayBoxClientPhone: "0999999999",
 
-    /*
-     * Requerido. Identificación del tarjetahabiente
-        */
-
+    /* Requerido. Identificación del tarjetahabiente */
     PayBoxClientIdentification: '123456789',
-    /* SOLO PARA PAGOS RECURRENTES
-     *  Solo aplica para comercios que tengan habilitado pagos
-           recurrentes
-        */
 
-    /* Requerido
-       True -> en caso de realizar un pago recurrente
-        False -> si es pago normal
-     */
-    PayboxRecurrent: true,
-
-    /* Requerido
-       Id o nombre exacto del plan registrado en el comercio en la  
-               plataforma de pagoplux
-    */
-    PayboxIdPlan: 'Bacano',
+    /* SOLO PARA PAGOS RECURRENTES */
+    PayboxRecurrent: false,
+    PayboxIdPlan: 'Bacano', // Default, may need to be removed if not recurrent
+    PayboxPermitirCalendarizar: true, // Default, may need to be removed if not recurrent
+    PayboxPagoInmediato: false, // Default, may need to be removed if not recurrent
+    PayboxCobroPrueba: false, // Default, may need to be removed if not recurrent
 
     /**
-     * true -> los cobros se realizan de manera automática según la
-               frecuencia del plan asignado en PAGOPLUX
-     * false -> los cobros se realizan mediante solicitud
+     * Default onAuthorize callback.
+     * This version uses global navigation and potentially jQuery.
+     * A component-specific callback (like in Donacion.tsx) can provide better integration.
      */
-    PayboxPermitirCalendarizar: true,
-    /* Requerido
-     * true -> El débito se realiza en el momento del pago
-     * false -> El débito se realizará en la fecha de corte según el plan
-       contratado
-    */
-    PayboxPagoInmediato: false,
-
-    /* Requerido
-      true -> si desea realizar un pago de prueba de 1$ y reverso del
-      mismo de manera automática
-      NOTA: PayboxPagoImediato debe ser igual false
-      false -> no se realizará ningún cobro de prueba
-    */
-    PayboxCobroPrueba: false,
-
-
     onAuthorize: (response: any) => {
         if (response.status === "succeeded") {
-            console.log(response);
-            // alert("Proceso completado con éxito");
-            // toast.success("Proceso completado con éxito");
-            // @ts-ignore
-            jQuery('.container-unpayed').hide();
-            console.log(response) //monto
-            // response.deferred, //diferidos
-            // response.interest, //tiene intereses
-            // response.interestValue, //monto intereses
-            // response.amountWoTaxes, //monto impuestos
-            // response.cardInfo, //número de tarjeta encriptado
-            // response.cardIssuer, //marca tarjeta Ejemplo: Visa
-            // response.cardType, //tipo tarjeta Ejemplo: Crédito
-            // response.clientID, //identificación tarjetahabiente
-            // response.clientName, //nombre tarjetahabiente
-            // response.fecha, //fecha de pago
-            // response.id_transaccion, //id de transacción pagoplux
-            // response.state, //estado del pago
-            // response.token, //voucher del pago
-            // response.tipoPago //tipo de pago usado
+            console.log("Default onAuthorize (ppx.data.ts) - Payment Succeeded:", response);
+            // Example: toast.success("Proceso completado con éxito");
+            if (typeof jQuery !== 'undefined') {
+                jQuery('.container-unpayed').hide();
+            } else {
+                console.warn("jQuery not defined, cannot hide .container-unpayed");
+            }
+            // WARNING: This causes a full page reload. For SPAs, router navigation is preferred.
+            window.location.href = "/pagado";
+        } else {
+            console.error("Default onAuthorize (ppx.data.ts) - Payment Failed:", response);
         }
     }
-}
+};
 
-export { data }
+export { data };

@@ -14,14 +14,19 @@ let data2 = {}
 
 // Hook para manejar la sección de monto
 function useMontoSection() {
+  const { setDonacionData } = useDonacionStore();
   const [monto, setMonto] = useState('');
   
   const handleMontoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMonto(e.target.value);
+    setDonacionData({ monto: +e.target.value });
+    // data.PayboxBase0 = e.target.value;
   };
   
   const handleMontoPreset = (valor: string) => {
     setMonto(valor);
+    setDonacionData({ monto: +valor });
+    //  data.PayboxBase0 = valor;
   };
   
   return { monto, handleMontoChange, handleMontoPreset };
@@ -29,20 +34,28 @@ function useMontoSection() {
 
 // Hook para manejar la sección de información personal
 function useInfoSection() {
+  // zustand store
+  const { setDonacionData } = useDonacionStore();
   const [email, setEmail] = useState('');
   const [nombre, setNombre] = useState('');
   const [telefono, setTelefono] = useState('');
   
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
+    setDonacionData({ email: e.target.value });
+    // data.PayboxSendmail = e.target.value;
   };
   
   const handleNombreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNombre(e.target.value);
+    setDonacionData({ nombre: e.target.value });
+     data.PayboxSendname = e.target.value;
   };
 
   const handleTelefonoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTelefono(e.target.value);
+    setDonacionData({ telefono: e.target.value });
+    // data.PayBoxClientPhone = e.target.value;
   };
 
   return { email, nombre, telefono, handleEmailChange, handleNombreChange, handleTelefonoChange };
@@ -53,6 +66,7 @@ function validarEmail(email: string) {
   return re.test(email);
 }
 
+
 export default function MontoTarjeta() {
   const { monto, handleMontoChange, handleMontoPreset } = useMontoSection();
   const { email, nombre, telefono, handleEmailChange, handleNombreChange, handleTelefonoChange } = useInfoSection();
@@ -60,45 +74,11 @@ export default function MontoTarjeta() {
   const { setDonacionData } = useDonacionStore();
   const [puedePagar, setPuedePagar] = useState(false);
   const [suscripcion, setSuscripcion] = useState(false);
-  const [data3, setData3] = useState({...data});
+  const [data3, setData3] = useState({...data, 
+});
 
   const [_, navigate] = useLocation()
 
-  const validar = () => {
-    if(seccionAbierta === 'cuanto') {
-      toggleSeccion('de');
-      document.getElementById('email')?.focus();
-      return false;
-    }
-
-    if(!monto || monto === '' || monto === '0') {
-      toast.error('Por favor completa el monto');
-      toggleSeccion('cuanto');
-      document.getElementById('monto')?.focus();
-      return false;
-    }
-
-    if(!email || email === '' ) {
-      toast.error('Por favor completa el correo electrónico');
-      // toggleSeccion('de');
-      document.getElementById('email')?.focus();
-      return false;
-    }
-
-    if(!validarEmail(email)) {
-      toast.error('El correo electrónico no es válido');
-      document.getElementById('email')?.focus();
-      return false;
-    }
-
-    if(telefono.length > 0 && telefono.length < 9) {
-      toast.error('El número de teléfono debe tener al menos 9 dígitos');
-      document.getElementById('telefono')?.focus();
-      return false;
-    }
-
-    return true;
-  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -202,6 +182,7 @@ export default function MontoTarjeta() {
     if(nombre.length > 0) {
       // @ts-ignore
       console.log('nombre', nombre);
+      // data.PayboxSendname = nombre;
       tempdata.PayboxSendname = nombre;
       // setData3({ ...data3, PayboxSendname: nombre });
       // data2.PayboxClientName = nombre;
@@ -285,15 +266,15 @@ export default function MontoTarjeta() {
         
         <div className="p-8 bg-gray-50 border-t border-gray-100">
          
-          {
-            puedePagar ? (<PpxButton data={data3}/>) : (<button
+          
+            <button
             type="submit"
             onClick={handleSubmit}
             className="w-full flex justify-center py-3 px-6 border border-transparent rounded-lg shadow-md text-lg font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 cursor-pointer"
           >
             {seccionAbierta === 'cuanto' ? 'Continuar' : 'Pagar'}
-          </button>)
-          }
+          </button>
+          
         </div>
       </div>
        
