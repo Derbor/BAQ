@@ -1,0 +1,7 @@
+node_modules
+auth_info
+.wwebjs_cache
+.env
+.wwebjs_auth
+auth_info_baileys
+token-cache.json

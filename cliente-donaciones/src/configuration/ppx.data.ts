@@ -1,6 +1,5 @@
 let data = {
     /* Requerido. Email de la cuenta PagoPlux del Establecimiento */
-    // PayboxRemail: "cflores@openlab.ec",
     PayboxRemail: "abautista@pagoplux.com",
 
     /* Requerido. Email del usuario que realiza el pago */
@@ -103,7 +102,7 @@ let data = {
             alert("Proceso completado con éxito");
             // @ts-ignore
             jQuery('.container-unpayed').hide();
-            console.log(response.amount) //monto
+            console.log(response) //monto
             // response.deferred, //diferidos
             // response.interest, //tiene intereses
             // response.interestValue, //monto intereses
