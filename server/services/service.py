@@ -54,3 +54,12 @@ class BAQService:
             return None
         return {"emails" : emails, "subject": emailSubject, "body": emailBody}
     
+
+    def create_mail_template(self, content, name, recurrent):
+        return create_mail_template_command(content, name, recurrent)
+    
+    def update_mail_template(self, template_id, content, name, recurrent):
+        return update_mail_template_command(template_id, content, name, recurrent)
+    
+    def get_mail_templates(self):
+        return get_all_message_templates()

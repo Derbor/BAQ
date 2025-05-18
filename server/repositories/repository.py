@@ -290,3 +290,73 @@ def get_not_subscribed_emails(date):
         print("Error getting subscribed emails:", e)
         return []
 
+
+def create_mail_template_command(content, name, recurrent):
+    try:
+        connection = postgresql_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                INSERT INTO message_templates (recurrent, type, name, content)
+                VALUES (%s, %s, %s, %s)
+                RETURNING id;
+                """,
+                (recurrent, "MAIL", name, content)
+            )
+            new_id = cursor.fetchone()[0]
+            connection.commit()
+            return new_id
+    except Exception as e:
+        print("Error creating message template:", e)
+        return None
+    finally:
+        if connection:
+            connection.close()
+
+
+def update_mail_template_command(template_id, content, name, recurrent):
+    try:
+        connection = postgresql_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                UPDATE message_templates
+                SET content = %s, name = %s, recurrent = %s
+                WHERE id = %s AND type = 'MAIL'
+                RETURNING id;
+                """,
+                (content, name, recurrent, template_id)
+            )
+            updated_id = cursor.fetchone()
+            if updated_id:
+                connection.commit()
+                return updated_id[0]
+            else:
+                return None
+    except Exception as e:
+        print("Error updating message template:", e)
+        return None
+    finally:
+        if connection:
+            connection.close()
+
+
+def get_all_message_templates():
+    try:
+        connection = postgresql_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT id, recurrent, type, name, content
+                FROM message_templates
+                WHERE type = 'MAIL'
+                """
+            )
+            results = cursor.fetchall()
+            return results
+    except Exception as e:
+        print("Error getting message templates:", e)
+        return None
+    finally:
+        if connection:
+            connection.close()
