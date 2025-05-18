@@ -2,42 +2,49 @@ import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 dotenv.config();
 
+async function sendEmails(data) {
+  try {
+    const response = await fetch('http://localhost:3000/correo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const contentType = response.headers.get('content-type') || '';
+
+    if (contentType.includes('application/json')) {
+      const result = await response.json();
+    } else {
+      const text = await response.text();
+    }
+  } catch (error) {
+    console.error('Error enviando correos:', error);
+  }
+}
+
 async function main() {
   try {
-
-    //SUBCRIBED USERS EMAILS
-    const response = await fetch('http://192.168.56.1:8081/mails', {
+    // SUBSCRIBED USERS EMAILS
+    const response = await fetch('http://162.243.77.211:8081/mails', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ recurrent: true })
     });
 
     const data = await response.json();
-    console.warn(data);
+    console.warn('Suscritos:', data);
+    await sendEmails(data);
 
-    const sendResponse = await fetch('http://localhost:3000/correo', {
+    // NOT SUBSCRIBED USERS EMAILS
+    const responseNotSubscribed = await fetch('http://162.243.77.211:8081/mails', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-
-    await sendResponse.json();
-
-    //NOT SUBSCRIBED USERS EMAILS
-    const responseNotSubscribed = await fetch('http://192.168.56.1:8081/mails', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ recurrent: true })
+      body: JSON.stringify({ recurrent: false })
     });
 
     const notSubscribedEmails = await responseNotSubscribed.json();
-    console.warn(data);
-
-    await fetch('http://localhost:3000/correo', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(notSubscribedEmails)
-    });
+    console.warn('No suscritos:', notSubscribedEmails);
+    await sendEmails(notSubscribedEmails);
 
   } catch (err) {
     console.error('Error en el cronjob:', err);
